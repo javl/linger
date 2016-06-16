@@ -23,7 +23,7 @@ PARSER.add_argument('-db', default='probes.db', dest='db_name', metavar='filenam
 help='Database name. Defaults to probes.', action='store')
 
 PARSER.add_argument('-f', default='', dest='local_file', metavar='filename',\
-help='Use a local .pcap file instead of a live capture.', action='store')
+help='Use a .pcap file as input instead of a live capture.', action='store')
 
 PARSER.add_argument('-d', dest='drop_database', action='store_true',\
 help='Overwrite the database.')
@@ -34,7 +34,7 @@ help='Transmitter interface. Defaults to mon0.', action='store')
 PARSER.add_argument('-r', default='mon1', dest='iface_receive', metavar='interface',\
 help='Receiver interface. Defaults to mon1.', action='store')
 
-PARSER.add_argument('-mode', default='both', dest='mode', metavar='number', type=int, \
+PARSER.add_argument('-mode', default='3', dest='mode', metavar='number', type=int, \
 choices=[1, 2, 3], help='Mode: 1 = scan, 2 = transmit, 3 = both. Defaults to 3.', action='store')
 
 PARSER.add_argument('-v', dest='verbose', action='count',\
