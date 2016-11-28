@@ -6,13 +6,9 @@ Often smartphones remember every wifi network they have been
 connected to in the past. Your phone will call out the names of 
 these know networks to see if it will get a response from a known
 router, meaning it should be able to connect again.
-
-This list broadcasted by your device can be seen by anyone who wants
-to and can be used to identify indivuals as these data often contain
-unique (combinations) of information. One of the uses for this is 
-the tracking of costumers in shops (or people passing by within range).
-It can be used for things like tracking the amount of visits made and 
-the time spend inside (down to specific areas of the store).
+As this broadcasted list contains 'unique' information, it can be
+used to track individuals, something that is being done more and more
+by shops.
 Following the logic that these signals can be seen as a person, this 
 script generates a large virtual crowd by collecting these messages 
 from everyone who comes into range and resending them when they have 
