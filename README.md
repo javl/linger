@@ -1,5 +1,5 @@
 # Linger #
-_WIP, needs a better title_
+_WIP & needs a better title_
 
 ## short ##
 Often smartphones remember every wifi network they have been 
