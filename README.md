@@ -13,8 +13,8 @@ and for various reasons.
 Following the logic that these signals can be seen as a person, this 
 script generates a large virtual crowd by collecting these messages 
 from everyone who comes into range and resending them when they have 
-left. The physical you might have left, but your digital 
-version will stay forever.
+left. The physical you might have left, but your virtual version 
+will stay forever.
 
 ## short (tech version)##
 Linger listens for, and saves, probe requests coming from WIFI enabled 
