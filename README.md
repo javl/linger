@@ -24,7 +24,7 @@ Linger listens for, and saves, probe requests coming from WIFI enabled
 devices. When these devices leave the area (determined by the time 
 since their last probe request) it will start resending the saved 
 probe requests, tricking other listeners into thinking the device 
-is still there.
+is still there and creating a virtual crowd.
 
 ## long ##
 Most WIFI enabled devices remember the names of all wireless
