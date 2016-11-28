@@ -8,7 +8,7 @@ these know networks to see if it will get a response from a known
 router, meaning it should be able to connect again.
 As this broadcasted list contains 'unique' information, it can be
 used to track individuals, something that is being done more and more
-by shops.
+and for various reasons.
 Following the logic that these signals can be seen as a person, this 
 script generates a large virtual crowd by collecting these messages 
 from everyone who comes into range and resending them when they have 
