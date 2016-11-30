@@ -45,7 +45,7 @@ help='Show program\'s version number and exit.')
 
 
 ARGS = PARSER.parse_args()
-if ARGS.db_name[:3] != ".db": ARGS.db_name += ".db"
+if ARGS.db_name[-3:] != ".db": ARGS.db_name += ".db"
 
 # Stop script if not running as root. Doing this after the argparse so you can still
 # read the help info without sudo (using -h / --help flag)
@@ -120,7 +120,7 @@ class PacketTransmitter(threading.Thread):
                     cur.execute("UPDATE entries SET last_used=CURRENT_TIMESTAMP WHERE id = ?", (id,))
                     con.commit()
 
-                    sendp(packets, iface=ARGS.iface_transmit, verbose=ARGS.verbose>2)
+                sendp(packets, iface=ARGS.iface_transmit, verbose=ARGS.verbose>2)
 
     #=========================================================
     # Keep checking the packages for probe requests
