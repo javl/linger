@@ -15,7 +15,7 @@ case "$1" in
     start)
         echo "Starting linger_rx"
         sudo airmon-ng start wlan1
-        /usr/bin/python /home/pi/linger_rx.py -i mon0 -v
+        /usr/bin/python /home/pi/linger/linger_rx.py -i mon0 -v
         ;;
     stop)
         echo "Stopping linger_rx"
