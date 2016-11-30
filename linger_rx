@@ -1,0 +1,31 @@
+#!/bin/bash
+# /etc/init.d/linger_rx
+
+### BEGIN INIT INFO
+# Provides:          linger_rx
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: linger_rx
+# Description:       This service is used to capture probe requests
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo "Starting linger_rx"
+        sudo airmon-ng start wlan1
+        /usr/bin/python /home/pi/linger_rx.py -i mon0 -v
+        ;;
+    stop)
+        echo "Stopping linger_rx"
+        sudo kill `ps -eo pid,command | grep "linger_rx.py" | grep -v grep | head -1 | awk '{print $1}'
+        sudo airmon-ng stop mon0
+        ;;
+    *)
+        echo "Usage: /etc/init.d/linger_rx start|stop"
+        exit 1
+        ;;
+esac
+
+exit 0
