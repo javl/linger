@@ -19,7 +19,7 @@ case "$1" in
         ;;
     stop)
         echo "Stopping linger_rx"
-        sudo kill `ps -eo pid,command | grep "linger_rx.py" | grep -v grep | head -1 | awk '{print $1}'
+        sudo kill `ps -eo pid,command | grep "linger_rx.py" | grep -v grep | head -1 | awk '{print $1}'`
         sudo airmon-ng stop mon0
         ;;
     *)
