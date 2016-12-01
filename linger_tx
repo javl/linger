@@ -15,17 +15,17 @@ case "$1" in
     start)
         # Wait 5 seconds for tty1 to become ready. Must be a cleaner way?
         sleep 5
-        # Wait 5 extra seconds so we know mon0 has been populated and
-        # the next monitor mode device will be mon1
-        sleep 5
+        ## Wait 5 extra seconds so we know mon0 has been populated and
+        ## the next monitor mode device will be mon1
+        #sleep 5
         echo "Starting linger_tx" > /dev/tty1
-        sudo airmon-ng start wlan2 1>/dev/null 2>/home/pi/linger/log
-        sudo /home/pi/linger/linger_tx.py -i mon1 -v 1> /dev/tty1 2>/home/pi/linger/log
+        #sudo airmon-ng start wlan2 1>/dev/null 2>/home/pi/linger/log
+        sudo /home/pi/linger/linger_tx.py -i wlan2 -v 1> /dev/tty1 2>/home/pi/linger/log
         ;;
     stop)
         echo "Stopping linger_tx" > /dev/tty1
         sudo kill `ps -eo pid,command | grep "linger_tx.py" | grep -v grep | head -1 | awk '{print $1}'`1>/dev/null 2>/home/pi/linger/log
-        sudo airmon-ng stop mon1 1>/dev/null
+        #sudo airmon-ng stop mon1 1>/dev/null
         echo "Done" > /dev/tty1
         ;;
     *)

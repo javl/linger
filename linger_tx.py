@@ -17,11 +17,11 @@ For more info on what Linger
 does see README.md''',
 formatter_class=RawTextHelpFormatter)
 
-PARSER.add_argument('-db', default='probes.db', dest='db_name', metavar='filename',\
+PARSER.add_argument('-db', default='probes', dest='db_name', metavar='filename',\
 help='Database name. Defaults to probes.', action='store')
 
-PARSER.add_argument('-i', default='mon1', dest='iface_transmit', metavar='interface',\
-help='Transmitter interface. Defaults to mon1.', action='store')
+PARSER.add_argument('-i', default='wlan2', dest='iface_transmit', metavar='interface',\
+help='Transmitter interface. Defaults to wlan2.', action='store')
 
 PARSER.add_argument('-v', dest='verbose', action='count',\
 help='Verbose; can be used up to 3 times to set the verbose level.')
@@ -75,7 +75,7 @@ def randomSN():
 def send_existing_packets(con):
     with con:
         cur = con.cursor()
-        cur.execute("SELECT id, command FROM entries \
+        cur.execute("SELECT id, mac, essid, command FROM entries \
             WHERE mac = (SELECT mac \
             FROM entries \
             WHERE strftime('%s', last_used) - strftime('%s','now') < -10 \
@@ -85,11 +85,11 @@ def send_existing_packets(con):
         if len(rows) != 0:
             SN = randomSN()
             packets = []
-            if ARGS.verbose > 1: print "Mac address: ", row[1];
+            if ARGS.verbose > 1: print "Mac address: ", rows[0][1];
             for row in rows:
                 if ARGS.verbose > 1: print "--> ", row[2];
                 id = int(row[0])
-                command = row[1]
+                command = row[3]
                 p = eval(command)
                 p.SC = calculateSC(SN)
                 packets.append(p)
