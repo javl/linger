@@ -17,7 +17,7 @@ case "$1" in
         sleep 5
         echo "Starting linger_rx" > /dev/tty1
         sudo airmon-ng start wlan1 1>/dev/null 2>/home/pi/linger/log
-        sudo /home/pi/linger/linger_rx.py -i mon0 -vvv 1> /dev/tty1 2>/home/pi/linger/log
+        sudo /home/pi/linger/linger_rx.py -i mon0 -v 1> /dev/tty1 2>/home/pi/linger/log
         ;;
     stop)
         echo "Stopping linger_rx" > /dev/tty1
