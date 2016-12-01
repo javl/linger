@@ -6,22 +6,14 @@ import sqlite3 as lite
 from scapy.all import *
 from random import random
 
-# Functions used to catch a kill signal so we can cleanly
-# exit (like storing the database)
-def set_exit_handler(func):
-    signal.signal(signal.SIGTERM, func)
-def on_exit(sig, func=None):
-    if ARGS.verbose > 0: print "Received kill signal, exiting"
-    sys.exit(1)
-
 #===========================================================
 # Handle arguments
 #===========================================================
 PARSER = argparse.ArgumentParser(prog='linger', description=
-'''Linger listens for, and saves, probe requests coming from
-other WIFI enabled devices, and will replay them after the
-original device has left the area. For more info on what Linger
-does see README.md''',
+'''This is the receiver part of Linger, which listens for,
+and saves, probe requests coming from other WIFI enabled devices,
+and will replay them after the original device has left the area.
+For more info see README.md''',
 formatter_class=RawTextHelpFormatter)
 
 PARSER.add_argument('-db', default='probes.sqlite', dest='db_name', metavar='filename',\
@@ -47,6 +39,15 @@ if not os.geteuid() == 0:
 
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
+
+# Functions used to catch a kill signal so we can cleanly
+# exit (like storing the database)
+def set_exit_handler(func):
+    signal.signal(signal.SIGTERM, func)
+def on_exit(sig, func=None):
+    if ARGS.verbose > 0: print "Received kill signal, exiting"
+    sys.exit(1)
+
 
 #=======================================================
 # Extract a sequence number
