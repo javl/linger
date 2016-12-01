@@ -65,7 +65,7 @@ def pkt_callback(pkt):
     essid = pkt[Dot11Elt].info.decode('utf-8', 'ignore')
     SN = extractSN(pkt.SC)
     if essid != '':
-        con = lite.connect('%s' % ARGS.db_name)
+        con = lite.connect('/home/pi/linger/%s' % ARGS.db_name)
         with con:
             cur = con.cursor()
 
@@ -88,7 +88,7 @@ def main():
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database %s" % ARGS.db_name
-    con = lite.connect('%s' % ARGS.db_name)
+    con = lite.connect('/home/pi/linger/%s' % ARGS.db_name)
     with con:
         cur = con.cursor()
         #=======================================================
