@@ -1,4 +1,4 @@
 env
 *.sqlite
 log
-lingerSettings.py
+lingerSettings.py*
