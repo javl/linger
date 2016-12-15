@@ -98,7 +98,7 @@ def pkt_callback(pkt):
 # Main loop
 #===========================================================
 def main():
-	global monitorIface
+    global monitorIface
     # Start monitor mode
     result = subprocess.check_output("sudo airmon-ng start {}".format(monitorIface), shell=True)
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
