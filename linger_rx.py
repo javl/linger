@@ -5,7 +5,7 @@ try:
 except:
     lingerPath = "/home/pi/linger"
 
-import os, sys, signal, argparse
+import os, sys, signal, argparse, subprocess, re
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
@@ -24,13 +24,13 @@ For more info see README.md''',
 formatter_class=RawTextHelpFormatter)
 
 PARSER.add_argument('-db', default='probes.sqlite', dest='db_name', metavar='filename',\
-help='Name of database to use. Defaults to "probes"', action='store')
+help='Name of database to use. Defaults to "probes".', action='store')
 
 PARSER.add_argument('-d', dest='drop_database', action='store_true',\
-help='Drop the database before starting.')
+help='Drop the database before starting. Will ask for confirmation.')
 
-PARSER.add_argument('-i', default='mon0', dest='iface_receive', metavar='interface',\
-help='Interface to use for receiving packets. Defaults to mon0.', action='store')
+PARSER.add_argument('-i', default='wlan1', dest='iface_receive', metavar='interface',\
+help='Interface to use for receiving packets. Defaults to wlan1.', action='store')
 
 PARSER.add_argument('-v', dest='verbose', action='count',\
 help='Verbose; can be used up to 3 times to set the verbose level.')
@@ -47,14 +47,19 @@ if not os.geteuid() == 0:
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
 
+# Creating this here so we can use it globally later
+monitorIface = None
+
 # Functions used to catch a kill signal so we can cleanly
 # exit (like storing the database)
 def set_exit_handler(func):
     signal.signal(signal.SIGTERM, func)
-def on_exit(sig, func=None):
-    if ARGS.verbose > 0: print "Received kill signal, exiting"
-    sys.exit(1)
 
+def on_exit(sig, func=None):
+    global monitorIface
+    if ARGS.verbose > 0: print "Received kill signal. Stop monitor mode and exit"
+    result = subprocess.check_output("sudo airmon-ng stop {}".format(monitorIface), shell=True)
+    sys.exit(1)
 
 #=======================================================
 # Extract a sequence number
@@ -93,6 +98,17 @@ def pkt_callback(pkt):
 # Main loop
 #===========================================================
 def main():
+    # Start monitor mode
+    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
+    print "result: ", result
+    
+    m = re.search("\(monitor mode enabled on (.+?)\)", result)
+    if m:
+        print "found: "
+        monitorIface = m.groups()[0]
+    else:
+        print "Something went wrong enabling monitor mode."
+        system.exit(0)    
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
@@ -117,8 +133,8 @@ def main():
             "last_used" DATETIME DEFAULT CURRENT_TIMESTAMP)')
 
     # Start looking for packets
-    if ARGS.verbose > 0: print "Starting linger_rx on {} with database {}".format(ARGS.iface_receive, ARGS.db_name)
-    sniff(iface=ARGS.iface_receive, prn=pkt_callback, store=0, lfilter = lambda x: x.haslayer(Dot11ProbeReq))
+    if ARGS.verbose > 0: print "Starting linger_rx on {} with database {}".format(monitorIface, ARGS.db_name)
+    sniff(iface=monitorIface, prn=pkt_callback, store=0, lfilter = lambda x: x.haslayer(Dot11ProbeReq))
 
 
 if __name__ == "__main__":
