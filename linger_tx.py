@@ -5,7 +5,7 @@ try:
 except:
     lingerPath = "/home/pi/linger"
 
-import argparse, threading, time, os, sys
+import argparse, threading, time, os, sys, subprocess, re
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
@@ -44,6 +44,9 @@ if not os.geteuid() == 0:
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
 
+# Creating this here so we can use it globally later
+monitorIface = None
+
 MAX_SN = 4096 # Max value for the 802.11 sequence number field
 MAX_FGNUM = 16 # Max value for the 802.11 fragment number field
 
@@ -51,8 +54,11 @@ MAX_FGNUM = 16 # Max value for the 802.11 fragment number field
 # exit (like storing the database)
 def set_exit_handler(func):
     signal.signal(signal.SIGTERM, func)
+
 def on_exit(sig, func=None):
-    if ARGS.verbose > 0: print "Received kill signal, exiting"
+    global monitorIface
+    if ARGS.verbose > 0: print "Received kill signal. Stop monitor mode and exit"
+    result = subprocess.check_output("sudo airmon-ng stop {}".format(monitorIface), shell=True)
     sys.exit(1)
 
 #=======================================================
@@ -78,6 +84,7 @@ def randomSN():
 #=======================================================
 # Get a user
 def send_existing_packets(con):
+    global monitorIface
     with con:
         cur = con.cursor()
         cur.execute("SELECT id, mac, essid, command FROM entries \
@@ -101,12 +108,21 @@ def send_existing_packets(con):
                 SN+=1
                 cur.execute("UPDATE entries SET last_used=CURRENT_TIMESTAMP WHERE id = ?", (id,))
                 con.commit()
-            sendp(packets, iface=ARGS.iface_transmit, verbose=ARGS.verbose>2)
+            sendp(packets, iface=monitorIface, verbose=ARGS.verbose>2)
 
 #===========================================================
 # Main program
 #===========================================================
 def main():
+    # Start monitor mode
+    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
+    m = re.search("\(monitor mode enabled on (.+?)\)", result)
+    if m:
+        monitorIface = m.groups()[0]
+    else:
+        print "Something went wrong enabling monitor mode."
+        system.exit(0)
+
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)

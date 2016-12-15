@@ -98,17 +98,15 @@ def pkt_callback(pkt):
 # Main loop
 #===========================================================
 def main():
+	global monitorIface
     # Start monitor mode
-    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
-    print "result: ", result
-    
+    result = subprocess.check_output("sudo airmon-ng start {}".format(monitorIface), shell=True)
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
-        print "found: "
         monitorIface = m.groups()[0]
     else:
         print "Something went wrong enabling monitor mode."
-        system.exit(0)    
+        system.exit(0)
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
