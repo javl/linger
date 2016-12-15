@@ -115,7 +115,9 @@ def send_existing_packets(con):
 #===========================================================
 def main():
     # Start monitor mode
-    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
+    print "start monitor mode on: ", ARGS.iface_transmit
+    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_transmit), shell=True)
+    print "result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
         monitorIface = m.groups()[0]

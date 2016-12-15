@@ -91,7 +91,7 @@ def pkt_callback(pkt):
                     VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)", (mac, essid, pkt.command(), SN))
                 con.commit()
             else:
-                if ARGS.verbose > 1: print "Entry already exists -> {}, {}%s".format(mac, essid)
+                if ARGS.verbose > 1: print "Entry already exists -> {}, {}".format(mac, essid)
                 cur.execute("UPDATE entries SET last_used=CURRENT_TIMESTAMP WHERE mac=? and essid=?", (mac, essid))
 
 #===========================================================
@@ -100,7 +100,9 @@ def pkt_callback(pkt):
 def main():
     global monitorIface
     # Start monitor mode
-    result = subprocess.check_output("sudo airmon-ng start {}".format(monitorIface), shell=True)
+    print "start monitor mode on: ", ARGS.iface_receive
+    result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
+    print "Result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
         monitorIface = m.groups()[0]
