@@ -106,7 +106,7 @@ def main():
         monitorIface = m.groups()[0]
     else:
         print "Something went wrong enabling monitor mode."
-        system.exit(0)
+        sys.exit(0)
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
