@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 
+try:
+    from lingerSettings import *
+except:
+    lingerPath = "/home/pi/linger"
+
 import os, sys, signal, argparse
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
 from random import random
 
+#path = "/home/pi/linger"
+#path = "/home/javl/Projects/linger"
 #===========================================================
 # Handle arguments
 #===========================================================
@@ -66,7 +73,7 @@ def pkt_callback(pkt):
     essid = pkt[Dot11Elt].info.decode('utf-8', 'ignore')
     SN = extractSN(pkt.SC)
     if essid != '':
-        con = lite.connect('/home/pi/linger/%s' % ARGS.db_name)
+        con = lite.connect('{}/{}'.format(lingerPath, ARGS.db_name))
         with con:
             cur = con.cursor()
 
@@ -74,12 +81,12 @@ def pkt_callback(pkt):
             # check if combination of mac and essid exists, if so, only update 'last_used'
             cur.execute("SELECT id from entries WHERE mac=? and essid=?", (mac, essid))
             if not cur.fetchone():
-                if ARGS.verbose > 0: print "New entry -> %s, %s" % (mac, essid)
+                if ARGS.verbose > 0: print "New entry -> {}, {}".format(mac, essid)
                 cur.execute("INSERT INTO entries ('mac', 'essid', 'command', 'sequencenumber', 'added', last_used) \
                     VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)", (mac, essid, pkt.command(), SN))
                 con.commit()
             else:
-                if ARGS.verbose > 1: print "Entry already exists -> %s, %s" % (mac, essid)
+                if ARGS.verbose > 1: print "Entry already exists -> {}, {}%s".format(mac, essid)
                 cur.execute("UPDATE entries SET last_used=CURRENT_TIMESTAMP WHERE mac=? and essid=?", (mac, essid))
 
 #===========================================================
@@ -88,8 +95,8 @@ def pkt_callback(pkt):
 def main():
     #=========================================================
     # Create a database connection
-    if ARGS.verbose > 1: print "Using database %s" % ARGS.db_name
-    con = lite.connect('/home/pi/linger/%s' % ARGS.db_name)
+    if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
+    con = lite.connect('{}/{}'.format(lingerPath, ARGS.db_name))
     with con:
         cur = con.cursor()
         #=======================================================

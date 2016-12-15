@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+try:
+    from lingerSettings import *
+except:
+    lingerPath = "/home/pi/linger"
+
 import argparse, threading, time, os, sys
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
@@ -64,7 +69,7 @@ def calculateSC(sn, fgnum=0):
     if fgnum > MAX_FGNUM: fgnum = 0
     hexSN = hex(sn)[2:] + hex(fgnum)[2:]
     sc = int(hexSN, 16)
-    if ARGS.verbose > 2: print "use sn/sc: %i/%i" % (sn, sc)
+    if ARGS.verbose > 2: print "use sn/sc: {}/{}".format(sn, sc)
     return sc
 
 def randomSN():
@@ -104,8 +109,8 @@ def send_existing_packets(con):
 def main():
     #=========================================================
     # Create a database connection
-    if ARGS.verbose > 1: print "Using database %s" % ARGS.db_name
-    con = lite.connect('/home/pi/linger/%s' % ARGS.db_name)
+    if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
+    con = lite.connect("{}/{}".format(lingerPath, ARGS.db_name))
     cur = con.cursor()
     while True:
         send_existing_packets(con)
