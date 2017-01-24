@@ -6,15 +6,17 @@ except:
     # if we can't find alternative settings, use the RPi path
     lingerPath = "/home/pi/linger"
 
-import argparse, time, os, platform, sys
+import argparse, os, platform, sys
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
+from time import sleep
 
+# To be able to run this script for testing on a non-RPi device,
+# we check if we're on RPi hardware and skip some code if not
 onPi = True
 if platform.machine() != "armv7l":
     onPi = False
-
-if onPi:
+else:
     import tm1637
 
 #===========================================================
@@ -40,12 +42,12 @@ help='Show program\'s version number and exit.')
 ARGS = PARSER.parse_args()
 # Stop script if not running as root. Doing this after the argparse so you can still
 # read the help info without sudo (using -h / --help flag)
-if not os.geteuid() == 0:
-    sys.exit('Script must be run as root')
+if onPi and not os.geteuid() == 0:
+    sys.exit('Script must be run as root because of GPIO access')
 
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
-
+db_path = '/'.join([lingerPath, ARGS.db_name])
 # Functions used to catch a kill signal so we can cleanly
 # exit (like storing the database)
 def set_exit_handler(func):
@@ -60,8 +62,11 @@ def on_exit(sig, func=None):
 def get_device_amount(con):
     with con:
         cur = con.cursor()
-        cur.execute("SELECT COUNT(DISTINCT mac) AS amount FROM entries")
-        return cur.fetchone()[0]
+        try:
+            cur.execute("SELECT COUNT(DISTINCT mac) AS amount FROM entries")
+            return cur.fetchone()[0]
+        except: # return 0 if there was a problem
+            return 0
 
 #===========================================================
 # Main program
@@ -73,15 +78,31 @@ def main():
         Display.SetBrightness(3)
 
     #=========================================================
-    # Create a database connection
-    if ARGS.verbose > 1: print "Using database {}/{}".format(lingerPath, ARGS.db_name)
-    con = lite.connect("{}/{}".format(lingerPath, ARGS.db_name))
-    cur = con.cursor()
+    if ARGS.verbose > 1: print "Using database {}".format(db_path)
+
+    # Check if the database file exists, if not, retry every 10
+    # seconds, as the other scripts might need some time to
+    # create the file
+    firstError = True
+    while not os.path.isfile(db_path):
+        if firstError:
+            firstError = False;
+            print "Database {} does not exist".format(db_path)
+        print "Retry in 10 seconds...".format(db_path)
+        sleep(10)
+
+    # Create a database connection, catch any trouble while connecting
+    try:
+        con = lite.connect("{}/{}".format(lingerPath, ARGS.db_name))
+        cur = con.cursor()
+    except:
+        print "Error connecting to database..."
+
     while True:
         amount = get_device_amount(con)
         if onPi:
             Display.ShowInt(amount)
-        time.sleep(5)
+        sleep(5)
 
 if __name__ == "__main__":
     main()
