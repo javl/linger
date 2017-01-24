@@ -7,21 +7,21 @@ connected to in the past. Your phone will call out the names of
 these know networks to see if it will get a response from a known
 router, meaning it should be able to connect again.
 As this broadcasted list contains 'unique' information, it can be
-used to track individuals, something that is being done more and more
-and for various reasons.
+used to fingerprint and track individuals, something that is being 
+done more and more and for various reasons.
 
 Following the logic that these signals can be seen as a person, this
-script generates a large virtual crowd by collecting these messages
-from everyone who comes into range and resending them when they have
-left. The physical you might have left, but your virtual version
-will stay forever.
+installation generates a large virtual crowd by listening for and
+collecting these wifi signals from everyone who comes into range and
+repeating them endlessly. The physical you might have left, but your 
+virtual version will stay forever.
 
 ## short (tech version)##
-Linger listens for, and saves, probe requests coming from WIFI enabled
-devices. When these devices leave the area (determined by the time
-since their last probe request) it will start resending the saved
-probe requests, tricking other listeners into thinking the device
-is still there and creating a virtual crowd.
+Linger listens for and stores probe requests coming from WIFI enabled
+devices within range. When these devices leave the area (determined 
+by the time since their last probe request) it will start resending 
+the saved probe requests, tricking other listeners into thinking the 
+device is still there.
 
 ## long ##
 Most WIFI enabled devices remember the names of all wireless
