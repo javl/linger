@@ -2,25 +2,25 @@
 _WIP & needs a better title_
 
 ## short ##
-Often smartphones remember every wifi network they have been 
-connected to in the past. Your phone will call out the names of 
+Often smartphones remember every wifi network they have been
+connected to in the past. Your phone will call out the names of
 these know networks to see if it will get a response from a known
 router, meaning it should be able to connect again.
 As this broadcasted list contains 'unique' information, it can be
 used to track individuals, something that is being done more and more
 and for various reasons.
 
-Following the logic that these signals can be seen as a person, this 
-script generates a large virtual crowd by collecting these messages 
-from everyone who comes into range and resending them when they have 
-left. The physical you might have left, but your virtual version 
+Following the logic that these signals can be seen as a person, this
+script generates a large virtual crowd by collecting these messages
+from everyone who comes into range and resending them when they have
+left. The physical you might have left, but your virtual version
 will stay forever.
 
 ## short (tech version)##
-Linger listens for, and saves, probe requests coming from WIFI enabled 
-devices. When these devices leave the area (determined by the time 
-since their last probe request) it will start resending the saved 
-probe requests, tricking other listeners into thinking the device 
+Linger listens for, and saves, probe requests coming from WIFI enabled
+devices. When these devices leave the area (determined by the time
+since their last probe request) it will start resending the saved
+probe requests, tricking other listeners into thinking the device
 is still there and creating a virtual crowd.
 
 ## long ##
@@ -41,10 +41,10 @@ also wait and listen to find out if a known router is nearby.
 The problem with actively sending out probe request is that those
 messages contain a 'unique' device number and the name of the network
 your device wants to connect to. This can act as a fingerprint to
-your device, and by using one of many geolocation databases with 
-network names, it is trivial to find out where a device (and so, 
+your device, and by using one of many geolocation databases with
+network names, it is trivial to find out where a device (and so,
 its user) has been before (think of names like "The Hague Airport",
-or "some company name")- a tactic uses by shops and other 
+or "some company name")- a tactic uses by shops and other
 commercial parties to track people.
 
 Linger listens for, and saves, probe requests coming from all WIFI
@@ -54,5 +54,16 @@ it will start resending the saved probe requests, tricking others
 that might be listening into thinking the other device is still there.
 
 The more devices linger sees, the larger its collection of saved probe
-requests will become. This way, a virtual crowd of people will linger 
+requests will become. This way, a virtual crowd of people will linger
 and grow around the transmitting device.
+
+## Setup
+
+Copy `linger_rx.sh`, `linger_tx.sh` and `linger_counter.sh` to `/etc/init.d/`
+Register the scripts with the system:
+`sudo update-rc.d <scriptname> defaults`
+
+* `linger_rx`: receives probe requests and saves them to `probes.sqlite`
+* `linger_tx`: transmits probe requests found in the database
+* `linger_counter`: gets the amount of unique MAC addresses in the database
+and shows this number on a 7-segment display
