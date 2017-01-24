@@ -59,14 +59,15 @@ and grow around the transmitting device.
 
 ## Setup
 
-Copy `linger_rx.sh`, `linger_tx.sh` and `linger_counter.sh` to `/etc/init.d/`
-Register the scripts with the system:
-`sudo update-rc.d <scriptname> defaults`
-
+There are three parts to this script:
 * `linger_rx`: receives probe requests and saves them to `probes.sqlite`
 * `linger_tx`: transmits probe requests found in the database
 * `linger_counter`: gets the amount of unique MAC addresses in the database
-and shows this number on a 7-segment display
+and shows this on a 7-segment display.
+
+Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable 
+(`chmod +x linger_*`). Then register them so they are started after booting
+by running `sudo update-rc.d <filename> defaults` for each.
 
 
 Links:
