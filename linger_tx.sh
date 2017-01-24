@@ -1,5 +1,4 @@
-#!/bin/bash
-# /etc/init.d/linger_tx
+#!/bin/sh
 
 ### BEGIN INIT INFO
 # Provides:          linger_tx
@@ -7,31 +6,57 @@
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: linger_tx
-# Description:       This service is used to replay probe requests
+# Short-Description: Display script for Linger
+# Description:       Gets the current amount of unique MAC addresses from the database and displays them on a 7-segment display
 ### END INIT INFO
 
+# Change the next 3 lines to suit where you install your script and what you want to call it
+DIR=/home/pi/linger
+DAEMON=$DIR/linger_tx.py
+DAEMON_NAME=linger_tx
+
+# Add any command line options for your daemon here
+DAEMON_OPTS=""
+
+# This next line determines what user the script runs as.
+# Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
+DAEMON_USER=root
+
+# The process ID of the script when it runs is stored here:
+PIDFILE=/var/run/$DAEMON_NAME.pid
+
+. /lib/lsb/init-functions
+
+do_start () {
+    log_daemon_msg "Starting system $DAEMON_NAME daemon"
+    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
+    log_end_msg $?
+}
+do_stop () {
+    log_daemon_msg "Stopping system $DAEMON_NAME daemon"
+    start-stop-daemon --stop --pidfile $PIDFILE --retry 10
+    log_end_msg $?
+}
+
 case "$1" in
-    start)
-        # Wait 5 seconds for tty1 to become ready. Must be a cleaner way?
-        sleep 5
-        ## Wait 5 extra seconds so we know mon0 has been populated and
-        ## the next monitor mode device will be mon1
-        #sleep 5
-        echo "Starting linger_tx" > /dev/tty1
-        #sudo airmon-ng start wlan2 1>/dev/null 2>/home/pi/linger/log
-        sudo /home/pi/linger/linger_tx.py -i wlan2 -v 1> /dev/tty1 2>/home/pi/linger/log
+
+    start|stop)
+        do_${1}
         ;;
-    stop)
-        echo "Stopping linger_tx" > /dev/tty1
-        sudo kill `ps -eo pid,command | grep "linger_tx.py" | grep -v grep | head -1 | awk '{print $1}'`1>/dev/null 2>/home/pi/linger/log
-        #sudo airmon-ng stop mon1 1>/dev/null
-        echo "Done" > /dev/tty1
+
+    restart|reload|force-reload)
+        do_stop
+        do_start
         ;;
+
+    status)
+        status_of_proc "$DAEMON_NAME" "$DAEMON" && exit 0 || exit $?
+        ;;
+
     *)
-        echo "Usage: /etc/init.d/linger_tx start|stop"
+        echo "Usage: /etc/init.d/$DAEMON_NAME {start|stop|restart|status}"
         exit 1
         ;;
-esac
 
+esac
 exit 0
