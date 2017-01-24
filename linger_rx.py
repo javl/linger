@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
+# Stop script if not running as root. Doing this after the argparse so you can still
+# read the help info without sudo (using -h / --help flag)
+import os, sys
+if not os.geteuid() == 0:
+    sys.exit('Script must be run as root')
+
 try:
     from lingerSettings import *
 except:
     lingerPath = "/home/pi/linger"
 
-import os, sys, signal, argparse, subprocess, re
+import signal, argparse, subprocess, re
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
