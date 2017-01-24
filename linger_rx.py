@@ -11,6 +11,15 @@ import sqlite3 as lite
 from scapy.all import *
 from random import random
 
+#==============================================================================
+import logging
+logging_config = {
+    'filename': '/var/log/linger_rx.log',
+    'format': '%(asctime)s [%(levelname)s] %(message)s',
+    'level': logging.WARNING
+}
+logging.basicConfig(**logging_config)
+
 #path = "/home/pi/linger"
 #path = "/home/javl/Projects/linger"
 #===========================================================
@@ -74,6 +83,7 @@ def extractSN(sc):
 #=======================================================
 def pkt_callback(pkt):
     if ARGS.verbose > 2: print "Packet coming in"
+    logging.debug('Packet coming in');
     mac = pkt.addr2
     essid = pkt[Dot11Elt].info.decode('utf-8', 'ignore')
     SN = extractSN(pkt.SC)
@@ -87,11 +97,13 @@ def pkt_callback(pkt):
             cur.execute("SELECT id from entries WHERE mac=? and essid=?", (mac, essid))
             if not cur.fetchone():
                 if ARGS.verbose > 0: print "New entry -> {}, {}".format(mac, essid)
-                cur.execute("INSERT INTO entries ('mac', 'essid', 'command', 'sequencenumber', 'added', last_used) \
+                logging.info("New entry -> {}, {}".format(mac, essid))
+                cur.execute("INSERT INTO entries ('mac', 'essid', 'command', 'sequencenumber', 'added', last_used)
                     VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)", (mac, essid, pkt.command(), SN))
                 con.commit()
             else:
                 if ARGS.verbose > 1: print "Entry already exists -> {}, {}".format(mac, essid)
+                logging.info("Entry already exists -> {}, {}".format(mac, essid))
                 cur.execute("UPDATE entries SET last_used=CURRENT_TIMESTAMP WHERE mac=? and essid=?", (mac, essid))
 
 #===========================================================
@@ -100,18 +112,21 @@ def pkt_callback(pkt):
 def main():
     global monitorIface
     # Start monitor mode
-    print "start monitor mode on: ", ARGS.iface_receive
+    if ARGS.verbose > 1: print "start monitor mode on: ", ARGS.iface_receive
     result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
-    print "Result: ", result
+    if ARGS.verbose > 2: print "Result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
         monitorIface = m.groups()[0]
     else:
+        logging.critical("Something went wrong enabling monitor mode.")
         print "Something went wrong enabling monitor mode."
         sys.exit(0)
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
+    logging.info("Using database {}".format(ARGS.db_name))
+
     con = lite.connect('{}/{}'.format(lingerPath, ARGS.db_name))
     with con:
         cur = con.cursor()
@@ -134,6 +149,8 @@ def main():
 
     # Start looking for packets
     if ARGS.verbose > 0: print "Starting linger_rx on {} with database {}".format(monitorIface, ARGS.db_name)
+    logging.info("Starting linger_rx on {} with database {}".format(monitorIface, ARGS.db_name))
+
     sniff(iface=monitorIface, prn=pkt_callback, store=0, lfilter = lambda x: x.haslayer(Dot11ProbeReq))
 
 
