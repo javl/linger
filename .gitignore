@@ -3,3 +3,4 @@ env
 log
 lingerSettings.py*
 *.sqlite-journal
+*.pyc
