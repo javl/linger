@@ -11,7 +11,7 @@ try:
 except:
     lingerPath = "/home/pi/linger"
 
-import argparse, threading, time, subprocess, re
+import argparse, threading, time, subprocess, re, signal
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
@@ -148,4 +148,5 @@ def main():
         send_existing_packets(con)
 
 if __name__ == "__main__":
+    set_exit_handler(on_exit)
     main()
