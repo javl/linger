@@ -11,6 +11,14 @@ import sqlite3 as lite
 from scapy.all import *
 from random import random
 
+#==============================================================================
+import logging
+logging_config = {
+    'filename': '/var/log/linger_tx.log',
+    'format': '%(asctime)s [%(levelname)s] %(message)s',
+    'level': logging.WARNING
+}
+logging.basicConfig(**logging_config)
 #===========================================================
 # Handle arguments
 #===========================================================
@@ -98,8 +106,10 @@ def send_existing_packets(con):
             SN = randomSN()
             packets = []
             if ARGS.verbose > 1: print "Mac address: ", rows[0][1];
+            logging.debug('Mac address: {}'.format(rows[0][1]))
             for row in rows:
                 if ARGS.verbose > 1: print "--> ", row[2];
+                logging.debug('--> {}'.format(row[2]))
                 id = int(row[0])
                 command = row[3]
                 p = eval(command)
@@ -115,9 +125,9 @@ def send_existing_packets(con):
 #===========================================================
 def main():
     # Start monitor mode
-    print "start monitor mode on: ", ARGS.iface_transmit
+    if ARGS.verbose > 0: print "start monitor mode on: ", ARGS.iface_transmit
     result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_transmit), shell=True)
-    print "result: ", result
+    if ARGS.verbose > 2: print "result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
         monitorIface = m.groups()[0]
@@ -128,13 +138,12 @@ def main():
     #=========================================================
     # Create a database connection
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
+    logging.info("Using database {}".format(ARGS.db_name));
     con = lite.connect("{}/{}".format(lingerPath, ARGS.db_name))
     cur = con.cursor()
+
     while True:
         send_existing_packets(con)
-
-        # while True:#not packet_analyzer.event.isSet():
-            # time.sleep(100)
 
 if __name__ == "__main__":
     main()
