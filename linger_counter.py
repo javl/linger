@@ -15,7 +15,6 @@ if platform.machine() != "armv7l":
     onPi = False
 
 if onPi:
-    import RPi.GPIO as GPIO
     import tm1637
 
 #===========================================================
