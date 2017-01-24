@@ -104,7 +104,7 @@ def pkt_callback(pkt):
             if not cur.fetchone():
                 if ARGS.verbose > 0: print "New entry -> {}, {}".format(mac, essid)
                 logging.info("New entry -> {}, {}".format(mac, essid))
-                cur.execute("INSERT INTO entries ('mac', 'essid', 'command', 'sequencenumber', 'added', last_used)
+                cur.execute("INSERT INTO entries ('mac', 'essid', 'command', 'sequencenumber', 'added', last_used)\
                     VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)", (mac, essid, pkt.command(), SN))
                 con.commit()
             else:
