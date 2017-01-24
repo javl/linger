@@ -1,4 +1,4 @@
-
+# Original script by Richard IJzermans, with edits by Jasper van Loenen
 # https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/
 
 import sys
@@ -26,33 +26,33 @@ class TM1637:
 	__doublePoint = False
 	__Clkpin = 0
 	__Datapin = 0
-	__brightnes = BRIGHT_TYPICAL;
+	__brightness = BRIGHT_TYPICAL;
 	__currentData = [0,0,0,0];
 
-	def __init__( self, pinClock, pinData, brightnes ):
+	def __init__( self, pinClock, pinData, brightness ):
 		self.__Clkpin = pinClock
 		self.__Datapin = pinData
-		self.__brightnes = brightnes;
+		self.__brightness = brightness;
 		IO.setup(self.__Clkpin,OUTPUT)
 		IO.setup(self.__Datapin,OUTPUT)
-	# end  __init__
 
 	def Clear(self):
-		b = self.__brightnes;
+		b = self.__brightness;
 		point = self.__doublePoint;
-		self.__brightnes = 0;
+		self.__brightness = 0;
 		self.__doublePoint = False;
 		data = [0x7F,0x7F,0x7F,0x7F];
 		self.Show(data);
-		self.__brightnes = b;				# restore saved brightnes
+		self.__brightness = b; # restore saved brightness
 		self.__doublePoint = point;
-	# end  Clear
 
 	def ShowInt(self, i):
-		s = str(i)
+		d = map(int, ','.join(str(i)).split(','))
+		# add padding whitespace when using less than 4 digits
+		for x in xrange(0, 4-len(d)):
+			d.insert(0, 0x7F)
 		self.Clear()
-		for i in range(0,len(s)):
-			self.Show1(i, int(s[i]))
+		self.Show(d)
 
 	def Show( self, data ):
 		for i in range(0,4):
@@ -67,28 +67,23 @@ class TM1637:
 			self.writeByte(self.coding(data[i]));
 		self.stop();
 		self.start();
-		self.writeByte(0x88 + self.__brightnes);
+		self.writeByte(0x88 + self.__brightness);
 		self.stop();
-	# end  Show
 
-	def SetBrightnes(self, brightnes):		# brightnes 0...7
-		if( brightnes > 7 ):
-			brightnes = 7;
-		elif( brightnes < 0 ):
-			brightnes = 0;
+	def SetBrightness(self, brightness):		# brightness 0...7
+		if( brightness > 7 ):
+			brightness = 7;
+		elif( brightness < 0 ):
+			brightness = 0;
 
-		if( self.__brightnes != brightnes):
-			self.__brightnes = brightnes;
+		if( self.__brightness != brightness):
+			self.__brightness = brightness;
 			self.Show(self.__currentData);
-		# end if
-	# end  SetBrightnes
 
 	def ShowDoublepoint(self, on):			# shows or hides the doublepoint
 		if( self.__doublePoint != on):
 			self.__doublePoint = on;
 			self.Show(self.__currentData);
-		# end if
-	# end  ShowDoublepoint
 
 	def writeByte( self, data ):
 		for i in range(0,8):
@@ -99,7 +94,6 @@ class TM1637:
 				IO.output( self.__Datapin, LOW)
 			data = data >> 1
 			IO.output( self.__Clkpin, HIGH)
-		#endfor
 
 		# wait for ACK
 		IO.output( self.__Clkpin, LOW)
@@ -113,24 +107,19 @@ class TM1637:
 				IO.setup(self.__Datapin, OUTPUT)
 				IO.output( self.__Datapin, LOW)
 				IO.setup(self.__Datapin, INPUT)
-			#endif
-		# endwhile
 		IO.setup(self.__Datapin, OUTPUT)
-	# end writeByte
 
 	def start(self):
 		IO.output( self.__Clkpin, HIGH) # send start signal to TM1637
 		IO.output( self.__Datapin, HIGH)
 		IO.output( self.__Datapin, LOW)
 		IO.output( self.__Clkpin, LOW)
-	# end start
 
 	def stop(self):
 		IO.output( self.__Clkpin, LOW)
 		IO.output( self.__Datapin, LOW)
 		IO.output( self.__Clkpin, HIGH)
 		IO.output( self.__Datapin, HIGH)
-	# end stop
 
 	def coding(self, data):
 		if( self.__doublePoint ):
@@ -143,7 +132,3 @@ class TM1637:
 		else:
 			data = HexDigits[data] + pointData;
 		return data
-	# end coding
-
-# end class TM1637
-
