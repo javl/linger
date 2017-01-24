@@ -71,7 +71,7 @@ def main():
     if onPi:
         Display = tm1637.TM1637(23,24,tm1637.BRIGHT_TYPICAL)
         Display.Clear()
-        Display.SetBrightnes(3)
+        Display.SetBrightness(3)
 
     #=========================================================
     # Create a database connection
