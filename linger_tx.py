@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
+# Stop script if not running as root. Doing this after the argparse so you can still
+# read the help info without sudo (using -h / --help flag)
+import os, sys
+if not os.geteuid() == 0:
+    sys.exit('Script must be run as root')
+
 try:
     from lingerSettings import *
 except:
     lingerPath = "/home/pi/linger"
 
-import argparse, threading, time, os, sys, subprocess, re
+import argparse, threading, time, subprocess, re
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
@@ -44,10 +50,6 @@ help='Show program\'s version number and exit.')
 
 
 ARGS = PARSER.parse_args()
-# Stop script if not running as root. Doing this after the argparse so you can still
-# read the help info without sudo (using -h / --help flag)
-if not os.geteuid() == 0:
-    sys.exit('Script must be run as root')
 
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"

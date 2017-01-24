@@ -30,6 +30,13 @@ else:
     import tm1637
 
 #==============================================================================
+# Stop script if not running as root. Doing this after the argparse so you can still
+# read the help info without sudo (using -h / --help flag)
+if onPi and not os.geteuid() == 0:
+    sys.exit('Script must be run as root because of GPIO access')
+
+
+#==============================================================================
 # Handle arguments
 #==============================================================================
 PARSER = argparse.ArgumentParser(prog='linger', description=
@@ -49,12 +56,6 @@ PARSER.add_argument('--version', action='version', version='%(prog)s version 0.1
 help='Show program\'s version number and exit.')
 
 ARGS = PARSER.parse_args()
-
-#==============================================================================
-# Stop script if not running as root. Doing this after the argparse so you can still
-# read the help info without sudo (using -h / --help flag)
-if onPi and not os.geteuid() == 0:
-    sys.exit('Script must be run as root because of GPIO access')
 
 #==============================================================================
 # Add .sqlite to our database name if needed
