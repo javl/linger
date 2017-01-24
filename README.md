@@ -67,3 +67,8 @@ Register the scripts with the system:
 * `linger_tx`: transmits probe requests found in the database
 * `linger_counter`: gets the amount of unique MAC addresses in the database
 and shows this number on a 7-segment display
+
+
+Links:
+These startup scripts are based on [a tutorial by Stephen C Phillips.](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/)
+The script to control a tm1637 7-segment display from Python was written by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/)
