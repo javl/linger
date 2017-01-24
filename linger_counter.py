@@ -80,12 +80,8 @@ def main():
     cur = con.cursor()
     while True:
         amount = get_device_amount(con)
-        if ARGS.verbose > 2: print "Found {} MAC addresses".format(amount)
-        d= map(int, ','.join(str(amount)).split(','))
-        for x in xrange(0, 4-len(d)): # add padding whitespace
-            d.insert(0, 0x7F)
         if onPi:
-            Display.Show(d)
+            Display.ShowInt(amount)
         time.sleep(5)
 
 if __name__ == "__main__":
