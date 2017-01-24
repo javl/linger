@@ -11,7 +11,7 @@ from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 
 onPi = True
-if platform.machine != "armv7l":
+if platform.machine() != "armv7l":
     onPi = False
 
 if onPi:
@@ -80,11 +80,10 @@ def main():
     cur = con.cursor()
     while True:
         amount = get_device_amount(con)
+        if ARGS.verbose > 2: print "Found {} MAC addresses".format(amount)
         d= map(int, ','.join(str(amount)).split(','))
-        print d
-        for x in xrange(0, 4-len(d)):
+        for x in xrange(0, 4-len(d)): # add padding whitespace
             d.insert(0, 0x7F)
-        print d
         if onPi:
             Display.Show(d)
         time.sleep(5)
