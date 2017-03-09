@@ -9,23 +9,42 @@ if not os.geteuid() == 0:
 try:
     from lingerSettings import *
 except:
-    lingerPath = "/home/pi/linger"
+    lingerPath = "/home/pi/linger/"
 
-import signal, argparse, subprocess, re
+import signal, argparse, subprocess, re, json
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 from scapy.all import *
 from random import random
+
+LOGLEVEL = logging.WARNING
+# Load our config file
+try:
+    with open('config.json'.format(lingerPath)) as f:
+        config = json.load(f)
+        if config['run_rx'] == False:
+            sys.exit();
+        if config['loglevel'] == 'debug':
+            LOGLEVEL = logging.DEBUG
+        elif config['loglevel'] == 'info':
+            LOGLEVEL = logging.INFO
+        elif config['loglevel'] == 'warning':
+            LOGLEVEL = logging.WARNING
+        elif config['loglevel'] == 'error':
+            LOGLEVEL = logging.ERROR
+        elif config['loglevel'] == 'critical':
+            LOGLEVEL = logging.CRITICAL
+except Exception, e:
+    pass
 
 #==============================================================================
 import logging
 logging_config = {
     'filename': '/var/log/linger_rx.log',
     'format': '%(asctime)s [%(levelname)s] %(message)s',
-    'level': logging.WARNING
+    'level': LOGLEVEL
 }
 logging.basicConfig(**logging_config)
-
 #path = "/home/pi/linger"
 #path = "/home/javl/Projects/linger"
 #===========================================================
@@ -94,7 +113,7 @@ def pkt_callback(pkt):
     essid = pkt[Dot11Elt].info.decode('utf-8', 'ignore')
     SN = extractSN(pkt.SC)
     if essid != '':
-        con = lite.connect('{}/{}'.format(lingerPath, ARGS.db_name))
+        con = lite.connect('{}{}'.format(lingerPath, ARGS.db_name))
         with con:
             cur = con.cursor()
 
@@ -133,7 +152,7 @@ def main():
     if ARGS.verbose > 1: print "Using database {}".format(ARGS.db_name)
     logging.info("Using database {}".format(ARGS.db_name))
 
-    con = lite.connect('{}/{}'.format(lingerPath, ARGS.db_name))
+    con = lite.connect('{}{}'.format(lingerPath, ARGS.db_name))
     with con:
         cur = con.cursor()
         #=======================================================

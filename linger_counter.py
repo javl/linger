@@ -1,23 +1,68 @@
 #!/usr/bin/env python
-import argparse, os, platform, sys, time
+import argparse, os, platform, sys, time, logging, json, logging.config
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 
+LOGLEVEL = logging.WARNING
+# Load our config file
+try:
+    with open('config.json') as f:
+        print "open"
+        config = json.load(f)
+        print config
+        if config['run_rx'] == False:
+            sys.exit();
+        # if config['loglevel'] == 'debug':
+            # LOGLEVEL = logging.DEBUG
+        # elif config['loglevel'] == 'info':
+            # LOGLEVEL = logging.INFO
+        # elif config['loglevel'] == 'warning':
+            # LOGLEVEL = logging.WARNING
+        # elif config['loglevel'] == 'error':
+            # LOGLEVEL = logging.ERROR
+        # elif config['loglevel'] == 'critical':
+            # LOGLEVEL = logging.CRITICAL
+        print "loaded"
+        try:
+            print "use level: ", config['log_level']
+            logging_config = {
+                'filename': '/var/log/linger_counter.log',
+                'format': '%(asctime)s [%(levelname)s] %(message)s',
+                'level': config['log_level']
+            }
+        except Exception, e:
+            print "exc: ", e
+        logging.config.dictConfig(**logging_config)
+        # logging.basicConfig(**logging_config)
+        print "do log"
+        logging.debug("debugggg")
+        logging.error("errrrrror")
+        logging.warning("warningg")
+        logging.critical("crit")
+        print "end log"
+
+except Exception, e:
+    print "non"
+    print e
+    pass
+
 #==============================================================================
-import logging
 logging_config = {
     'filename': '/var/log/linger_counter.log',
     'format': '%(asctime)s [%(levelname)s] %(message)s',
-    'level': logging.WARNING
+    'level': LOGLEVEL
 }
 logging.basicConfig(**logging_config)
+logging.debug("debugggg")
+logging.error("errrrrror")
+logging.warning("warningg")
 
 #==============================================================================
 try:
     from lingerSettings import *
 except:
     # if no alternative path has been set, use the RPi path
-    lingerPath = "/home/pi/linger"
+    lingerPath = "/home/pi/linger/"
 
 #==============================================================================
 # To be able to run this script for testing on a non-RPi device,
@@ -60,7 +105,8 @@ ARGS = PARSER.parse_args()
 #==============================================================================
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
-db_path = '/'.join([lingerPath, ARGS.db_name])
+db_path = ''.join([lingerPath, ARGS.db_name])
+print "dbpath: ", db_path
 
 # Functions used to catch a kill signal so we can cleanly
 # exit (like storing a database)
@@ -79,8 +125,9 @@ def get_device_amount(con):
         try:
             cur.execute("SELECT COUNT(DISTINCT mac) AS amount FROM entries")
             return cur.fetchone()[0]
-        except: # simply return 0 if there was a problem
+        except Exception, e: # simply return 0 if there was a problem
             if ARGS.verbose > 0: print "Encountered a problem getting the device amount"
+            print e
             logging.warning('Problem getting amount of devices from database')
             return 0
 
@@ -112,7 +159,7 @@ def main():
 
     # Create a database connection, catch any trouble while connecting
     try:
-        con = lite.connect("{}/{}".format(lingerPath, ARGS.db_name))
+        con = lite.connect("{}{}".format(lingerPath, ARGS.db_name))
         cur = con.cursor()
     except:
         logging.error('Error connecting to database')
