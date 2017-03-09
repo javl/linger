@@ -1,0 +1,7 @@
+{
+    "path": "/home/pi/linger/",
+    "log_level" : "WARNING",
+    "run_tx" : true,
+    "run_rx" : true,
+    "run_counter" : true
+}
