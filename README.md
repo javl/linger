@@ -16,7 +16,7 @@ collecting these wifi signals from everyone who comes into range and
 repeating them endlessly. The physical you might have left, but your 
 virtual version will stay forever.
 
-## short (tech version)##
+## short (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
 devices within range. When these devices leave the area (determined 
 by the time since their last probe request) it will start resending 
