@@ -2,32 +2,40 @@
 
 ## short ##
 
-Most mobile devices (such as smartphones) remember every wifi 
-network they have been connected to in the past. Your phone will 
-call out the names of these known networks to see if it will get a
-response from a known router, meaning it should be able to connect 
-to its wifi network again.
+Most mobile devices are always searching for wifi networks they have 
+been connected to in the past. To do this your phone is basically 
+yelling every name of every network it has ever been connected (at 
+home, at the office or at that one hotel on holiday) to see if it 
+will get a response from the router.
+These messages contain enough unique information* to use them to 
+fingerprint and track individuals, something that is being done by 
+different parties and for various reasons. Shops for instance, use 
+this data to track how many people walk by, how many actually come 
+into the store, and how much time you've spend in the candy isle 
+before making your choice.
 
-As these signals sent from your phone contain ‘unique’ information,
-they can be used to fingerprint and track individuals, something 
-that is being done by multiple parties and for various reasons.
-Shops for instance, use this data to track how many people walk by, 
-how many actually come into the store, and how much time you’ve 
-spent in the candy aisle before making your choice.
- 
-Linger is a small, portable device that allows you to (following 
-the logic that these signals can be seen as a person) create a 
-virtual crowd by storing and re-broadcasting these wifi signals 
-from everyone who comes into range. 
+Linger is a small, portable device that allows you to create 
+and blend into a virtual crowd by storing these specific wifi signals 
+from everyone that comes within range, and rebroadcasting their 
+signals infinitely.
+As you pass people in the streets and their signals are stored in the 
+database, a small display on the device will show the amount of 
+individuals in your group.
+
 Their physical body might have left, but their virtual version will 
 stay with you forever.
+
+\* This information can be faked (like Linger is doing) and some 
+software even allows you to turn these signals off completely, but 
+most devices will send these signals by default (including iPhones 
+and most Android devices).
 
 ## short (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
 devices within range. When these devices leave the area (determined 
 by the time since their last probe request) it will start resending 
-the saved probe requests, tricking other listeners into thinking the 
-device is still there.
+the saved probe requests (with updated sequence numbers), tricking 
+other listeners into thinking the device is still there.
 
 ## long ##
 Most WIFI enabled devices remember the names of all wireless
@@ -61,7 +69,7 @@ that might be listening into thinking the other device is still there.
 
 The more devices linger sees, the larger its collection of saved probe
 requests will become. This way, a virtual crowd of people will linger
-and grow around the transmitting device.#
+and grow around the device.#
 
 ## Setup
 
