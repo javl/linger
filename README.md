@@ -3,10 +3,10 @@
 ## short ##
 
 Most mobile devices are always searching for wifi networks they have 
-been connected to in the past. To do this your phone is basically 
-yelling every name of every network it has ever been connected (at 
-home, at the office or at that one hotel on holiday) to see if it 
-will get a response from the router.
+been connected to in the past. To do this, your phone is basically 
+yelling every name of every network it has ever been connected to 
+(at home, at the office or at that one hotel on holiday), to see if 
+it will get a response from the router.
 These messages contain enough unique information* to use them to 
 fingerprint and track individuals, something that is being done by 
 different parties and for various reasons. Shops for instance, use 
@@ -14,13 +14,13 @@ this data to track how many people walk by, how many actually come
 into the store, and how much time you've spend in the candy isle 
 before making your choice.
 
-Linger is a small, portable device that allows you to create 
-and blend into a virtual crowd by storing these specific wifi signals 
-from everyone that comes within range, and rebroadcasting their 
-signals infinitely.
-As you pass people in the streets and their signals are stored in the 
-database, a small display on the device will show the amount of 
-individuals in your group.
+Linger is a small, portable device that allows you to create and 
+blend into a virtual crowd by storing these specific wifi signals 
+from everyone that comes near you, and rebroadcasting their signals 
+infinitely as if they are still there.
+As you pass people in the streets and their signals are stored in 
+the database, a small display on the device will show the number of
+unique individuals in your group.
 
 Their physical body might have left, but their virtual version will 
 stay with you forever.
