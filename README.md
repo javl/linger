@@ -1,8 +1,11 @@
 # Linger #
 
-Project page can be found [here](https://jaspervanloenen.com/linger/).
+A project page with more images can be found [here](https://jaspervanloenen.com/linger/).
 
-## short ##
+![Linger and Moos](images/linger_moos_small.jpg)
+![Linger front](images/linger_front_small.jpg)
+
+## short description ##
 
 Most mobile devices — such as smartphones — are always searching 
 for wifi networks they have been connected to in the past. Your 
@@ -31,7 +34,7 @@ software even allows you to turn these signals off completely, but
 most devices will send these signals by default (including iPhones 
 and most Android devices).
 
-## short (tech version) ##
+## short description (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
 devices within range into an sqlite database. When these devices 
 leave the area (determined by the time since their last probe 
@@ -39,7 +42,7 @@ request) it will start resending the saved probe requests
 (with updated sequence numbers), tricking other listeners 
 into thinking the device is still there.
 
-## long ##
+## long description ##
 Most WIFI enabled devices remember the names of all wireless
 networks they have been connected to in the past. Whenever
 your device is on, but not connected to a network (or sometimes
@@ -73,7 +76,16 @@ The more devices linger sees, the larger its collection of saved probe
 requests will become. This way, a virtual crowd of people will linger
 and grow around the device.#
 
-## Setup
+## Hardware Setup
+
+The device uses a 7-segment LED display, a Raspberry Pi Zero, two TL-WN722N Wifi dongles and a powered USB hub. The powered hub is needed because the Pi can't provide enough power to run both Wifi dongles.
+
+A simple explaination of how to connect the 7-segment display and some example code can be found [here](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/).
+After I checked eveything was working, I stripped the cases off of the Wifi dongles and USB hub, removed the USB sockets from the PCBs and connected all of the different parts by small wires to save space. I've put some cardboard inbetween the different components to prevent any shorts.
+
+I've also soldered in a single full-size female USB A port; I used this to connect a USB-to-ethernet adapter for easy access to the Pi. A small momentary switch was also added to power off the device. I used the first scematic on [this page](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi).
+
+## Software Setup
 
 There are three parts to this script:
 * `linger_rx`: receives probe requests and saves them to `probes.sqlite` by default
@@ -85,6 +97,9 @@ Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable
 (`chmod +x linger_*`). Then register them so they are started after booting
 by running `sudo update-rc.d <filename> defaults` for each of the three files.
 
+To power down the device I used the code [found here]( and the code [shown here](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi/(offset)/5)). After pressing my power button the display turns off to show the shutdown script is running, and after about 30 seconds it is safe to remove the power cable.
+
 ## Links:
-To create the startup scripts I used [a tutorial by Stephen C Phillips.](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/).
-The script to control a tm1637 7-segment display from Python was written by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/).
+* To create the startup scripts I used [a tutorial by Stephen C Phillips](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/).
+* The script to control a tm1637 7-segment display from Python is a modified version of a script by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/).
+* The scematic and code for the power button come from [Raspberry Pi Geek](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi).
