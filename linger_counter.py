@@ -64,22 +64,6 @@ except:
     # if no alternative path has been set, use the RPi path
     lingerPath = "/home/pi/linger/"
 
-#==============================================================================
-# To be able to run this script for testing on a non-RPi device,
-# we check if we're on RPi hardware and skip some code if not
-onPi = True
-if platform.machine() != "armv7l":
-    onPi = False
-    logging.info('Not a RPi, so running in limited mode')
-else:
-    import tm1637
-
-#==============================================================================
-# Stop script if not running as root. Doing this after the argparse so you can still
-# read the help info without sudo (using -h / --help flag)
-if onPi and not os.geteuid() == 0:
-    sys.exit('Script must be run as root because of GPIO access')
-
 
 #==============================================================================
 # Handle arguments
@@ -103,10 +87,33 @@ help='Show program\'s version number and exit.')
 ARGS = PARSER.parse_args()
 
 #==============================================================================
+# To be able to run this script for testing on a non-RPi device,
+# we check if we're on RPi hardware and skip some code if not
+onPi = True
+if platform.machine() != "armv7l" and platform.machine() != "armv6l":
+    onPi = False
+    if ARGS.verbose > 2: print "onPi: False"
+    logging.info('Not a RPi, so running in limited mode')
+else:
+    if ARGS.verbose > 2: print "onPi: True"
+    import tm1637
+
+#==============================================================================
+# Stop script if not running as root. Doing this after the argparse so you can still
+# read the help info without sudo (using -h / --help flag)
+if onPi and not os.geteuid() == 0:
+    sys.exit('Script must be run as root because of GPIO access')
+
+
+#==============================================================================
 # Add .sqlite to our database name if needed
 if ARGS.db_name[-7:] != ".sqlite": ARGS.db_name += ".sqlite"
 db_path = ''.join([lingerPath, ARGS.db_name])
 print "dbpath: ", db_path
+
+if onPi:
+    # Load our display so we can use it globally
+    Display = tm1637.TM1637(23,24,tm1637.BRIGHT_TYPICAL)
 
 # Functions used to catch a kill signal so we can cleanly
 # exit (like storing a database)
@@ -115,6 +122,8 @@ def set_exit_handler(func):
 
 def on_exit(sig, func=None):
     if ARGS.verbose > 0: print "Received kill signal. Stop"
+    Display.Clear()
+    Display.SetBrightness(0)
     sys.exit(1)
 
 #=======================================================
@@ -135,11 +144,15 @@ def get_device_amount(con):
 # Main program
 #===========================================================
 def main():
+    set_exit_handler(on_exit)
 
+    global Display
     if onPi:
-        Display = tm1637.TM1637(23,24,tm1637.BRIGHT_TYPICAL)
+        if ARGS.verbose > 2: print "On Pi: initiate display"
+        #Display = tm1637.TM1637(23,24,tm1637.BRIGHT_TYPICAL)
         Display.Clear()
         Display.SetBrightness(3)
+        Display.ShowInt(0)
 
     #=========================================================
     if ARGS.verbose > 1: print "Using database {}".format(db_path)

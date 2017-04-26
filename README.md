@@ -1,27 +1,43 @@
 # Linger #
-_WIP & needs a better title_
+
+Project page can be found [here](https://jaspervanloenen.com/linger/).
 
 ## short ##
-Often smartphones remember every wifi network they have been
-connected to in the past. Your phone will call out the names of
-these know networks to see if it will get a response from a known
-router, meaning it should be able to connect again.
-As this broadcasted list contains 'unique' information, it can be
-used to fingerprint and track individuals, something that is being 
-done more and more and for various reasons.
 
-Following the logic that these signals can be seen as a person, this
-installation generates a large virtual crowd by listening for and
-collecting these wifi signals from everyone who comes into range and
-repeating them endlessly. The physical you might have left, but your 
-virtual version will stay forever.
+Most mobile devices — such as smartphones — are always searching 
+for wifi networks they have been connected to in the past. Your 
+phone is basically yelling every name of every network it has ever 
+been connected to — at home, at the office or at that hotel with 
+the dodgy connection — to see if it will get a response from the router.
+These messages contain enough unique information\* to be used to 
+fingerprint and track individuals, something that is already being 
+done by many different parties, and for various reasons. Shops for 
+instance, use this data to track how many people walk by, how many 
+actually come into the store, and how much time you’ve spent in the 
+candy aisle before making your choice.
 
-## short (tech version)##
+Linger is a small, portable device that allows you to create and 
+blend into a virtual crowd by storing the specific wifi signals 
+from everyone that comes near you, and rebroadcasting their signals 
+infinitely when they leave, making it seem as if they are still there. 
+As you pass people in the street and their signals are stored in the 
+database, a small display on the device automatically updates to show 
+the number of unique individuals in your group.
+
+Physically they may have left, but their virtual presence will stay with you forever.
+
+\* This information can be faked (like Linger is doing) and some 
+software even allows you to turn these signals off completely, but 
+most devices will send these signals by default (including iPhones 
+and most Android devices).
+
+## short (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
-devices within range. When these devices leave the area (determined 
-by the time since their last probe request) it will start resending 
-the saved probe requests, tricking other listeners into thinking the 
-device is still there.
+devices within range into an sqlite database. When these devices 
+leave the area (determined by the time since their last probe 
+request) it will start resending the saved probe requests 
+(with updated sequence numbers), tricking other listeners 
+into thinking the device is still there.
 
 ## long ##
 Most WIFI enabled devices remember the names of all wireless
@@ -55,21 +71,20 @@ that might be listening into thinking the other device is still there.
 
 The more devices linger sees, the larger its collection of saved probe
 requests will become. This way, a virtual crowd of people will linger
-and grow around the transmitting device.
+and grow around the device.#
 
 ## Setup
 
 There are three parts to this script:
-* `linger_rx`: receives probe requests and saves them to `probes.sqlite`
+* `linger_rx`: receives probe requests and saves them to `probes.sqlite` by default
 * `linger_tx`: transmits probe requests found in the database
 * `linger_counter`: gets the amount of unique MAC addresses in the database
 and shows this on a 7-segment display.
 
 Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable 
 (`chmod +x linger_*`). Then register them so they are started after booting
-by running `sudo update-rc.d <filename> defaults` for each.
+by running `sudo update-rc.d <filename> defaults` for each of the three files.
 
-
-Links:
-These startup scripts are based on [a tutorial by Stephen C Phillips.](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/)
-The script to control a tm1637 7-segment display from Python was written by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/)
+## Links:
+To create the startup scripts I used [a tutorial by Stephen C Phillips.](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/).
+The script to control a tm1637 7-segment display from Python was written by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/).

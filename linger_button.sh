@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ### BEGIN INIT INFO
-# Provides:          linger_tx
+# Provides:          linger_button
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -12,8 +12,8 @@
 
 # Change the next 3 lines to suit where you install your script and what you want to call it
 DIR=/home/pi/linger
-DAEMON=$DIR/linger_tx.py
-DAEMON_NAME=linger_tx
+DAEMON=$DIR/linger_button.py
+DAEMON_NAME=linger_button
 
 # Add any command line options for your daemon here
 DAEMON_OPTS=""
