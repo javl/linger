@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+# Quit this script if we're not running on the pi zero
+# (otherwise sticking the sd card into my regular pi
+# without the button will turn it off immediately
+import platform
+if platform.machine() != "armv6l":
+    exit();
 
 import RPi.GPIO as GPIO
 import subprocess
