@@ -180,6 +180,8 @@ def main():
 
     while True:
         amount = get_device_amount(con)
+	if amount > 9999:
+		amount = 9999
         if onPi:
             Display.ShowInt(amount)
         time.sleep(5)
