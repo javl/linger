@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import argparse, os, platform, sys, time, logging, json, logging.config
+import argparse, os, platform, sys, time, logging, json, logging.config, signal
 from argparse import RawTextHelpFormatter
 import sqlite3 as lite
 
