@@ -1,45 +1,45 @@
 # Linger #
 
-A project page with more images can be found [here](https://jaspervanloenen.com/linger/).
+The project page can be found [here](https://jaspervanloenen.com/linger/).
 
 ![Linger and Moos](images/linger_moos_small.jpg)
 ![Linger front](images/linger_front_small.jpg)
 
 ## short description ##
 
-Most mobile devices — such as smartphones — are always searching 
-for wifi networks they have been connected to in the past. Your 
-phone is basically yelling every name of every network it has ever 
-been connected to — at home, at the office or at that hotel with 
+Most mobile devices — such as smartphones — are always searching
+for wifi networks they have been connected to in the past. Your
+phone is basically yelling every name of every network it has ever
+been connected to — at home, at the office or at that hotel with
 the dodgy connection — to see if it will get a response from the router.
-These messages contain enough unique information\* to be used to 
-fingerprint and track individuals, something that is already being 
-done by many different parties, and for various reasons. Shops for 
-instance, use this data to track how many people walk by, how many 
-actually come into the store, and how much time you’ve spent in the 
+These messages contain enough unique information\* to be used to
+fingerprint and track individuals, something that is already being
+done by many different parties, and for various reasons. Shops for
+instance, use this data to track how many people walk by, how many
+actually come into the store, and how much time you’ve spent in the
 candy aisle before making your choice.
 
-Linger is a small, portable device that allows you to create and 
-blend into a virtual crowd by storing the specific wifi signals 
-from everyone that comes near you, and rebroadcasting their signals 
-infinitely when they leave, making it seem as if they are still there. 
-As you pass people in the street and their signals are stored in the 
-database, a small display on the device automatically updates to show 
+Linger is a small, portable device that allows you to create and
+blend into a virtual crowd by storing the specific wifi signals
+from everyone that comes near you, and rebroadcasting their signals
+infinitely when they leave, making it seem as if they are still there.
+As you pass people in the street and their signals are stored in the
+database, a small display on the device automatically updates to show
 the number of unique individuals in your group.
 
 Physically they may have left, but their virtual presence will stay with you forever.
 
-\* This information can be faked (like Linger is doing) and some 
-software even allows you to turn these signals off completely, but 
-most devices will send these signals by default (including iPhones 
+\* This information can be faked (like Linger is doing) and some
+software even allows you to turn these signals off completely, but
+most devices will send these signals by default (including iPhones
 and most Android devices).
 
 ## short description (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
-devices within range into an sqlite database. When these devices 
-leave the area (determined by the time since their last probe 
-request) it will start resending the saved probe requests 
-(with updated sequence numbers), tricking other listeners 
+devices within range into an sqlite database. When these devices
+leave the area (determined by the time since their last probe
+request) it will start resending the saved probe requests
+(with updated sequence numbers), tricking other listeners
 into thinking the device is still there.
 
 ## long description ##
@@ -93,7 +93,7 @@ There are three parts to this script:
 * `linger_counter`: gets the amount of unique MAC addresses in the database
 and shows this on a 7-segment display.
 
-Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable 
+Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable
 (`chmod +x linger_*`). Then register them so they are started after booting
 by running `sudo update-rc.d <filename> defaults` for each of the three files.
 
