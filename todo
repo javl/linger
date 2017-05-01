@@ -1,2 +1,0 @@
-- add try (possible catch) to prevent crashes
-    last crash was in sendp in linger_tx
