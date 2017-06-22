@@ -138,9 +138,11 @@ def main():
     global monitorIface
     # Start monitor mode
     if ARGS.verbose > 1: print "start monitor mode on: ", ARGS.iface_receive
+        else print "monitor failed coby"
     result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
     if ARGS.verbose > 2: print "Result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
+    else print "monitor failed coby2"
     if m:
         monitorIface = m.groups()[0]
     else:
