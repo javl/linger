@@ -139,6 +139,7 @@ def main():
     # Start monitor mode
     if ARGS.verbose > 1: print "start monitor mode on: ", ARGS.iface_receive
     result = subprocess.check_output("sudo airmon-ng start {}".format(ARGS.iface_receive), shell=True)
+    else print "start monitor not on"
     if ARGS.verbose > 2: print "Result: ", result
     m = re.search("\(monitor mode enabled on (.+?)\)", result)
     if m:
