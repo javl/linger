@@ -5,7 +5,7 @@ The project page can be found [here](https://jaspervanloenen.com/linger/).
 ![Linger and Moos](images/linger_moos_small.jpg)
 ![Linger front](images/linger_front_small.jpg)
 
-## short description ##
+## Short description ##
 
 Most mobile devices — such as smartphones — are always searching
 for wifi networks they have been connected to in the past. Your
@@ -34,7 +34,7 @@ software even allows you to turn these signals off completely, but
 most devices will send these signals by default (including iPhones
 and most Android devices).
 
-## short description (tech version) ##
+## Short description (tech version) ##
 Linger listens for and stores probe requests coming from WIFI enabled
 devices within range into an sqlite database. When these devices
 leave the area (determined by the time since their last probe
@@ -42,7 +42,7 @@ request) it will start resending the saved probe requests
 (with updated sequence numbers), tricking other listeners
 into thinking the device is still there.
 
-## long description ##
+## Long description ##
 Most WIFI enabled devices remember the names of all wireless
 networks they have been connected to in the past. Whenever
 your device is on, but not connected to a network (or sometimes
