@@ -63,7 +63,7 @@ your device wants to connect to. This can act as a fingerprint to
 your device, and by using one of many geolocation databases with
 network names, it is trivial to find out where a device (and so,
 its user) has been before (think of names like "The Hague Airport",
-or "some company name")- a tactic uses by shops and other
+or "some company name") - a tactic used by shops and other
 commercial parties to track people.
 
 Linger listens for, and saves, probe requests coming from all WIFI
@@ -74,7 +74,7 @@ that might be listening into thinking the other device is still there.
 
 The more devices linger sees, the larger its collection of saved probe
 requests will become. This way, a virtual crowd of people will linger
-and grow around the device.#
+and grow around the device.
 
 ## Hardware Setup
 
@@ -97,9 +97,9 @@ Copy the three `.sh` files to `/etc/init.d/`. Make sure they are executable
 (`chmod +x linger_*`). Then register them so they are started after booting
 by running `sudo update-rc.d <filename> defaults` for each of the three files.
 
-To power down the device I used the code [found here]( and the code [shown here](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi/(offset)/5)). After pressing my power button the display turns off to show the shutdown script is running, and after about 30 seconds it is safe to remove the power cable.
+To power down the device I used the circuit and code [found here](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi/(offset)/5)). After pressing my power button the display turns off to show the shutdown script is running, and after about 10 seconds it is safe to remove the power cable.
 
 ## Links:
 * To create the startup scripts I used [a tutorial by Stephen C Phillips](http://blog.scphillips.com/posts/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/).
 * The script to control a tm1637 7-segment display from Python is a modified version of a script by [Richard IJzermans](https://raspberrytips.nl/tm1637-4-digit-led-display-raspberry-pi/).
-* The scematic and code for the power button come from [Raspberry Pi Geek](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi).
+* The schematic and code for the power button come from [Raspberry Pi Geek](http://www.raspberry-pi-geek.com/Archive/2013/01/Adding-an-On-Off-switch-to-your-Raspberry-Pi).
