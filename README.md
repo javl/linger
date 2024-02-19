@@ -2,6 +2,11 @@
 
 The project page can be found [here](https://jaspervanloenen.com/linger/).
 
+Did you find this script useful? Feel free to support my open source software:
+
+[![GitHub Sponsor](https://img.shields.io/github/sponsors/javl?label=Sponsor&logo=GitHub)](https://github.com/sponsors/javl)
+
+
 ![Linger and Moos](images/linger_moos_small.jpg)
 ![Linger front](images/linger_front_small.jpg)
 
