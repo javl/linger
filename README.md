@@ -6,6 +6,7 @@ Did you find this script useful? Feel free to support my open source software:
 
 [![GitHub Sponsor](https://img.shields.io/github/sponsors/javl?label=Sponsor&logo=GitHub)](https://github.com/sponsors/javl)
 
+[![BMC](https://www.buymeacoffee.com/assets/img/custom_images/white_img.png)](https://www.buymeacoffee.com/javl)
 
 ![Linger and Moos](images/linger_moos_small.jpg)
 ![Linger front](images/linger_front_small.jpg)
